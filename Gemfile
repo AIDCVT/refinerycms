@@ -9,6 +9,8 @@ path "./" do
   gem "refinerycms-resources"
 end
 
+gem "decorators", path: '../decorators'
+
 gem 'refinerycms-i18n', github: 'refinery/refinerycms-i18n', branch: 'master'
 
 # Add support for refinerycms-acts-as-indexed
