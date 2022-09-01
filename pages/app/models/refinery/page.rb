@@ -13,7 +13,7 @@ module Refinery
     after_save { translations.in_locale(Mobility.locale).seo_meta.save! }
 
     class Translation
-      is_seo_meta
+    #   is_seo_meta
     end
 
     has_many :parts, -> {

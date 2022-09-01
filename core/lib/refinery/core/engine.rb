@@ -45,11 +45,82 @@ module Refinery
       end
 
       initializer "refinery.mobility" do
-        Mobility.configure do |config|
-          config.default_backend = :table
-          config.accessor_method = :translates
-          config.query_method    = :i18n
-          config.default_options[:dirty] = true
+        Mobility.configure do
+          plugins do
+            # Backend
+            #
+            # Sets the default backend to use in models. This can be overridden in models
+            # by passing +backend: ...+ to +translates+.
+            #
+            # To default to a different backend globally, replace +:key_value+ by another
+            # backend name.
+            #
+            backend :table
+
+            # ActiveRecord
+            #
+            # Defines ActiveRecord as ORM, and enables ActiveRecord-specific plugins.
+            active_record
+
+            # Accessors
+            #
+            # Define reader and writer methods for translated attributes. Remove either
+            # to disable globally, or pass +reader: false+ or +writer: false+ to
+            # +translates+ in any translated model.
+            #
+            reader
+            writer
+
+            # Backend Reader
+            #
+            # Defines reader to access the backend for any attribute, of the form
+            # +<attribute>_backend+.
+            #
+            backend_reader
+            #
+            # Or pass an interpolation string to define a different pattern:
+            # backend_reader "%s_translations"
+
+            # Query
+            #
+            # Defines a scope on the model class which allows querying on
+            # translated attributes. The default scope is named +i18n+, pass a different
+            # name as default to change the global default, or to +translates+ in any
+            # model to change it for that model alone.
+            #
+            query
+
+            # Cache
+            #
+            # Comment out to disable caching reads and writes.
+            #
+            cache
+
+            # Dirty
+            #
+            # Uncomment this line to include and enable globally:
+            # dirty
+            #
+            # Or uncomment this line to include but disable by default, and only enable
+            # per model by passing +dirty: true+ to +translates+.
+            # dirty false
+
+            # Fallbacks
+            #
+            # Uncomment line below to enable fallbacks, using +I18n.fallbacks+.
+            # fallbacks
+            #
+            # Or uncomment this line to enable fallbacks with a global default.
+            # fallbacks { :pt => :en }
+
+            # Presence
+            #
+            # Converts blank strings to nil on reads and writes. Comment out to
+            # disable.
+            #
+            presence
+
+          end
         end
       end
 
