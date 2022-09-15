@@ -13,7 +13,7 @@ module Refinery
     after_save { translations.in_locale(Mobility.locale).seo_meta.save! }
 
     class Translation
-    #   is_seo_meta
+      is_seo_meta
     end
 
     has_many :parts, -> {
@@ -52,7 +52,7 @@ module Refinery
 
     # If title changes tell friendly_id to regenerate slug when saving record
     def should_generate_new_friendly_id?
-      title_changed? || custom_slug_changed?
+      saved_change_to_attribute?(:title) || saved_change_to_attribute?(:custom_slug)
     end
 
     validates :title, presence: true
@@ -73,14 +73,14 @@ module Refinery
 
       # Find page by path, checking for scoping rules
       def find_by_path(path)
-        Pages::Finder.by_path(path)
+        Pages::FinderByPath.new(path).find
       end
 
       # Helps to resolve the situation where you have a path and an id
       # and if the path is unfriendly then a different finder method is required
       # than find_by_path.
       def find_by_path_or_id(path, id)
-        Pages::Finder.by_path_or_id(path, id)
+        Pages::FinderByPathOrId.new(path, id).find
       end
 
       # Helps to resolve the situation where you have a path and an id
@@ -101,7 +101,7 @@ module Refinery
       # pages table thus requiring us to find the attribute on the translations table
       # and then join to the pages table again to return the associated record.
       def by_title(title)
-        Pages::Finder.by_title(title)
+        Pages::FinderByTitle.new(title).find
       end
 
       # Finds pages by their slug.  This method is necessary because pages
@@ -109,7 +109,7 @@ module Refinery
       # pages table thus requiring us to find the attribute on the translations table
       # and then join to the pages table again to return the associated record.
       def by_slug(slug, conditions = {})
-        Pages::Finder.by_slug(slug, conditions)
+        Pages::FinderBySlug.new(slug, conditions).find
       end
 
       # Shows all pages with :show_in_menu set to true, but it also

@@ -1,24 +1,8 @@
 module Refinery
   module Pages
     class Finder
-      def self.by_path(path)
-        FinderByPath.new(path).find
-      end
-
-      def self.by_path_or_id(path, id)
-        FinderByPathOrId.new(path, id).find
-      end
-
-      def self.by_title(title)
-        FinderByTitle.new(title).find
-      end
-
-      def self.by_slug(slug, conditions = {})
-        FinderBySlug.new(slug, conditions).find
-      end
-
       def self.with_mobility(conditions = {})
-        Finder.new(conditions).find
+        self.new(conditions).find
       end
 
       def initialize(conditions)
@@ -56,7 +40,6 @@ module Refinery
         end
         translations_conditions
       end
-
     end
 
     class FinderByTitle < Finder
