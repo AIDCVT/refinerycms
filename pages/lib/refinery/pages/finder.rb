@@ -86,7 +86,7 @@ module Refinery
         end
       end
 
-      private
+      protected
       attr_accessor :path
 
       def slugs_scoped_by_parent?
@@ -94,7 +94,7 @@ module Refinery
       end
 
       def by_slug(slug_path, conditions = {})
-        Finder.by_slug(slug_path, conditions)
+        FinderBySlug.new(slug_path, conditions).find
       end
     end
 
