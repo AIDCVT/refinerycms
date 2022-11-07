@@ -100,9 +100,9 @@ module Refinery
       # are translated which means the title attribute does not exist on the
       # pages table thus requiring us to find the attribute on the translations table
       # and then join to the pages table again to return the associated record.
-      def by_title(title)
-        Pages::FinderByTitle.new(title).find
-      end
+      # def by_title(title)
+      #   Pages::FinderByTitle.new(title).find
+      # end
 
       # Finds pages by their slug.  This method is necessary because pages
       # are translated which means the slug attribute does not exist on the
