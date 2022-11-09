@@ -71,11 +71,11 @@ module Refinery
       end
 
       def find_by_path_or_id(slug)
-        Pages.i18n.find_by(slug: slug)
+        Page.i18n.find_by(slug: slug)
       end
 
       def find_by_path_or_id(path, id)
-        Pages.i18n.find_by(path: path) || Pages.i18n.find_by(id: id)
+        Page.i18n.find_by(path: path) || Page.i18n.find_by(id: id)
       end
 
       def find_by_path_or_id!(path, id)
