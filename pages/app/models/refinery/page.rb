@@ -3,7 +3,6 @@ require 'friendly_id'
 require 'friendly_id/mobility'
 require 'refinery/core/base_model'
 require 'refinery/pages/url'
-require 'refinery/pages/finder'
 
 module Refinery
   class Page < Core::BaseModel
@@ -71,45 +70,19 @@ module Refinery
         where(:draft => false)
       end
 
-      # Find page by path, checking for scoping rules
-      def find_by_path(path)
-        Pages::FinderByPath.new(path).find
+      def find_by_path_or_id(slug)
+        Pages.i18n.find_by(slug: slug)
       end
 
-      # Helps to resolve the situation where you have a path and an id
-      # and if the path is unfriendly then a different finder method is required
-      # than find_by_path.
       def find_by_path_or_id(path, id)
-        Pages::FinderByPathOrId.new(path, id).find
+        Pages.i18n.find_by(path: path) || Pages.i18n.find_by(id: id)
       end
 
-      # Helps to resolve the situation where you have a path and an id
-      # and if the path is unfriendly then a different finder method is required
-      # than find_by_path.
-      #
-      # raise ActiveRecord::RecordNotFound if not found.
       def find_by_path_or_id!(path, id)
         page = find_by_path_or_id(path, id)
-
         raise ::ActiveRecord::RecordNotFound unless page
 
         page
-      end
-
-      # Finds pages by their title.  This method is necessary because pages
-      # are translated which means the title attribute does not exist on the
-      # pages table thus requiring us to find the attribute on the translations table
-      # and then join to the pages table again to return the associated record.
-      # def by_title(title)
-      #   Pages::FinderByTitle.new(title).find
-      # end
-
-      # Finds pages by their slug.  This method is necessary because pages
-      # are translated which means the slug attribute does not exist on the
-      # pages table thus requiring us to find the attribute on the translations table
-      # and then join to the pages table again to return the associated record.
-      def by_slug(slug, conditions = {})
-        Pages::FinderBySlug.new(slug, conditions).find
       end
 
       # Shows all pages with :show_in_menu set to true, but it also
@@ -117,17 +90,12 @@ module Refinery
       # This works using a query against the translated content first and then
       # using all of the page_ids we further filter against this model's table.
       def in_menu
-        where(show_in_menu: true).with_mobility
+        where(show_in_menu: true)
       end
 
       # An optimised scope containing only live pages ordered for display in a menu.
       def fast_menu
         live.in_menu.order(arel_table[:lft]).includes(:parent, :translations)
-      end
-
-      # Wrap up the logic of finding the pages based on the translations table.
-      def with_mobility(conditions = {})
-        Pages::Finder.with_mobility(conditions)
       end
 
       # Returns how many pages per page should there be when paginating pages
