@@ -70,12 +70,8 @@ module Refinery
         where(:draft => false)
       end
 
-      def find_by_path_or_id(slug)
-        Page.i18n.find_by(slug: slug)
-      end
-
       def find_by_path_or_id(path, id)
-        Page.i18n.find_by(path: path) || Page.i18n.find_by(id: id)
+        Page.i18n.find_by(slug: path) || Page.i18n.find_by(id: id)
       end
 
       def find_by_path_or_id!(path, id)
