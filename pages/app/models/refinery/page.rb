@@ -34,7 +34,7 @@ module Refinery
       def self.options
         # Docs for friendly_id https://github.com/norman/friendly_id
         friendly_id_options = {
-          use: [:mobility, :slugged, :reserved],
+          use: [:mobility, :reserved],
           reserved_words: Refinery::Pages.friendly_id_reserved_words
         }
         if ::Refinery::Pages.scope_slug_by_parent
@@ -51,7 +51,7 @@ module Refinery
 
     # If title changes tell friendly_id to regenerate slug when saving record
     def should_generate_new_friendly_id?
-      saved_change_to_attribute?(:title) || saved_change_to_attribute?(:custom_slug)
+      true
     end
 
     validates :title, presence: true
