@@ -34,7 +34,7 @@ module Refinery
       def self.options
         # Docs for friendly_id https://github.com/norman/friendly_id
         friendly_id_options = {
-          use: [:mobility, :reserved],
+          use: [:mobility, :slugged, :reserved],
           reserved_words: Refinery::Pages.friendly_id_reserved_words
         }
         if ::Refinery::Pages.scope_slug_by_parent
@@ -71,7 +71,9 @@ module Refinery
       end
 
       def find_by_path_or_id(path, id)
-        Page.i18n.find_by(slug: path) || Page.i18n.find_by(id: id)
+        Page.i18n.find_by(slug: path) ||
+          Page.find_by(id: path) ||
+          Page.find_by(id: id)
       end
 
       def find_by_path_or_id!(path, id)
