@@ -72,6 +72,7 @@ module Refinery
 
       def find_by_path_or_id(path, id)
         Page.i18n.find_by(slug: path) ||
+          Page.i18n.find_by(slug: id) ||
           Page.find_by(id: path) ||
           Page.find_by(id: id)
       end
